@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Todo
+from .forms import TodoForm
 
 # Create your views here.
 class TodoListView(ListView):
@@ -14,13 +15,13 @@ class TodoListView(ListView):
 
 class TodoCreateView(SuccessMessageMixin, CreateView):
     model = Todo
-    fields = ["title", "description", "due_date", "is_resolved"]
+    form_class = TodoForm
     success_url = reverse_lazy("todo-list")
     success_message = "Todo '%(title)s' was created successfully."
 
 class TodoUpdateView(SuccessMessageMixin, UpdateView):
     model = Todo
-    fields = ["title", "description", "due_date", "is_resolved"]
+    form_class = TodoForm
     success_url = reverse_lazy("todo-list")
     success_message = "Todo '%(title)s' was updated successfully."
 
