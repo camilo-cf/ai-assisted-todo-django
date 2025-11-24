@@ -1,51 +1,43 @@
 {% extends 'todos/base.html' %}
 
 {% block content %}
-<h2>My Todos</h2>
-{% if todos %}
-<ul>
-    {% for todo in todos %}
-    <li>
-        <div style="flex: 1;">
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                {% if todo.is_resolved %}
-                <span
-                    style="background: #10b981; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 600;">✓
-                    Resolved</span>
-                {% else %}
-                <span
-                    style="background: #f59e0b; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 600;">⏰
-                    Pending</span>
-                {% endif %}
-                <strong class="{% if todo.is_resolved %}resolved{% endif %}" style="font-size: 1.1rem;">{{ todo.title
-                    }}</strong>
-
-            </div>
-            {% if todo.description %}
-            <p style="margin: 0.5rem 0; color: var(--text-light); font-size: 0.9rem;">{{
-                todo.description|truncatewords:15 }}</p>
-            {% endif %}
-            <div style="display: flex; gap: 1rem; font-size: 0.85rem; color: var(--text-light); margin-top: 0.5rem;">
-                {% if todo.due_date %}
-                <span>📅 Due: <strong>{{ todo.due_date|date:"M d, Y g:i A" }}</strong></span>
-                {% endif %}
-                <span>🕐 Created: {{ todo.created_at|date:"M d, Y" }}</span>
-            </div>
+    <h2>My Todos</h2>
+    {% if todos %}
+        <ul>
+            {% for todo in todos %}
+                <li>
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            {% if todo.is_resolved %}
+                                <span style="background: #10b981; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 600;">✓ Resolved</span>
+                            {% else %}
+                                <span style="background: #f59e0b; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 600;">⏰ Pending</span>
+                            {% endif %}
+                            <strong class="{% if todo.is_resolved %}resolved{% endif %}" style="font-size: 1.1rem;">{{ todo.title }}</strong>
+                        </div>
+                        {% if todo.description %}
+                            <p style="margin: 0.5rem 0; color: var(--text-light); font-size: 0.9rem;">{{ todo.description|truncatewords:15 }}</p>
+                        {% endif %}
+                        <div style="display: flex; gap: 1rem; font-size: 0.85rem; color: var(--text-light); margin-top: 0.5rem;">
+                            {% if todo.due_date %}
+                                <span>📅 Due: <strong>{{ todo.due_date|date:"M d, Y g:i A" }}</strong></span>
+                            {% endif %}
+                            <span>🕐 Created: {{ todo.created_at|date:"M d, Y" }}</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        <a href="{% url 'todo-update' todo.pk %}" style="color: var(--primary); font-weight: 500;">✏️ Edit</a>
+                        <a href="{% url 'todo-delete' todo.pk %}" style="color: var(--danger); font-weight: 500;">🗑️ Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div style="text-align: center; padding: 3rem; background: var(--card-bg); border-radius: 0.5rem; border: 2px dashed var(--border);">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+            <h3 style="margin: 0 0 0.5rem 0; color: var(--text);">No todos yet!</h3>
+            <p style="color: var(--text-light); margin: 0 0 1.5rem 0;">Get started by creating your first todo.</p>
+            <a href="{% url 'todo-create' %}" class="btn">➕ Create Your First Todo</a>
         </div>
-        <div style="display: flex; gap: 0.75rem; align-items: center;">
-            <a href="{% url 'todo-update' todo.pk %}" style="color: var(--primary); font-weight: 500;">✏️ Edit</a>
-            <a href="{% url 'todo-delete' todo.pk %}" style="color: var(--danger); font-weight: 500;">🗑️ Delete</a>
-        </div>
-    </li>
-    {% endfor %}
-</ul>
-{% else %}
-<div
-    style="text-align: center; padding: 3rem; background: var(--card-bg); border-radius: 0.5rem; border: 2px dashed var(--border);">
-    <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
-    <h3 style="margin: 0 0 0.5rem 0; color: var(--text);">No todos yet!</h3>
-    <p style="color: var(--text-light); margin: 0 0 1.5rem 0;">Get started by creating your first todo.</p>
-    <a href="{% url 'todo-create' %}" class="btn">➕ Create Your First Todo</a>
-</div>
-{% endif %}
+    {% endif %}
 {% endblock %}
