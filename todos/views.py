@@ -11,8 +11,17 @@ class TodoListView(ListView):
     model = Todo
     template_name = "todos/home.html"
     context_object_name = "todos"
-
+    paginate_by = 10  # Show 10 todos per page
     ordering = ["-created_at"]
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add statistics
+        context['total_todos'] = Todo.objects.count()
+        context['completed_todos'] = Todo.objects.filter(is_resolved=True).count()
+        context['pending_todos'] = Todo.objects.filter(is_resolved=False).count()
+        return context
+
 
 class TodoCreateView(SuccessMessageMixin, CreateView):
     """Handle creation of new todo items with success message."""

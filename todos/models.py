@@ -23,5 +23,29 @@ class Todo(models.Model):
     def __str__(self):
         """Return the title of the todo."""
         return self.title
-
-
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Todo'
+        verbose_name_plural = 'Todos'
+        indexes = [
+            models.Index(fields=['-created_at']),
+            models.Index(fields=['is_resolved']),
+        ]
+    
+    def is_overdue(self):
+        """Check if the todo is overdue."""
+        from django.utils import timezone
+        if self.due_date and not self.is_resolved:
+            return self.due_date < timezone.now()
+        return False
+    
+    def mark_resolved(self):
+        """Mark the todo as resolved."""
+        self.is_resolved = True
+        self.save()
+    
+    def mark_unresolved(self):
+        """Mark the todo as unresolved."""
+        self.is_resolved = False
+        self.save()

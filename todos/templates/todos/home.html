@@ -1,7 +1,17 @@
 {% extends 'todos/base.html' %}
 
 {% block content %}
-    <h2>My Todos</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 style="margin: 0;">My Todos</h2>
+        {% if total_todos %}
+            <div style="display: flex; gap: 1rem; font-size: 0.875rem;">
+                <span>📊 Total: <strong>{{ total_todos }}</strong></span>
+                <span>✅ Completed: <strong>{{ completed_todos }}</strong></span>
+                <span>⏰ Pending: <strong>{{ pending_todos }}</strong></span>
+            </div>
+        {% endif %}
+    </div>
+    
     {% if todos %}
         <ul>
             {% for todo in todos %}
@@ -11,7 +21,11 @@
                             {% if todo.is_resolved %}
                                 <span style="background: #10b981; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 600;">✓ Resolved</span>
                             {% else %}
-                                <span style="background: #f59e0b; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 600;">⏰ Pending</span>
+                                {% if todo.is_overdue %}
+                                    <span style="background: #ef4444; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 600;">�� Overdue</span>
+                                {% else %}
+                                    <span style="background: #f59e0b; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 600;">⏰ Pending</span>
+                                {% endif %}
                             {% endif %}
                             <strong class="{% if todo.is_resolved %}resolved{% endif %}" style="font-size: 1.1rem;">{{ todo.title }}</strong>
                         </div>
@@ -32,6 +46,24 @@
                 </li>
             {% endfor %}
         </ul>
+        
+        {% if is_paginated %}
+            <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem;">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" class="btn" style="background: var(--card-bg); color: var(--text);">« First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="btn" style="background: var(--card-bg); color: var(--text);">‹ Previous</a>
+                {% endif %}
+                
+                <span style="padding: 0.5rem 1rem; background: var(--card-bg); border-radius: 0.375rem;">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="btn" style="background: var(--card-bg); color: var(--text);">Next ›</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn" style="background: var(--card-bg); color: var(--text);">Last »</a>
+                {% endif %}
+            </div>
+        {% endif %}
     {% else %}
         <div style="text-align: center; padding: 3rem; background: var(--card-bg); border-radius: 0.5rem; border: 2px dashed var(--border);">
             <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
