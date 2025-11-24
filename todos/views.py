@@ -7,6 +7,7 @@ from .forms import TodoForm
 
 # Create your views here.
 class TodoListView(ListView):
+    """Display a list of all todos, ordered by creation date (newest first)."""
     model = Todo
     template_name = "todos/home.html"
     context_object_name = "todos"
@@ -14,18 +15,21 @@ class TodoListView(ListView):
     ordering = ["-created_at"]
 
 class TodoCreateView(SuccessMessageMixin, CreateView):
+    """Handle creation of new todo items with success message."""
     model = Todo
     form_class = TodoForm
     success_url = reverse_lazy("todo-list")
     success_message = "Todo '%(title)s' was created successfully."
 
 class TodoUpdateView(SuccessMessageMixin, UpdateView):
+    """Handle updating existing todo items with success message."""
     model = Todo
     form_class = TodoForm
     success_url = reverse_lazy("todo-list")
     success_message = "Todo '%(title)s' was updated successfully."
 
 class TodoDeleteView(DeleteView):
+    """Handle deletion of todo items with confirmation and success message."""
     model = Todo
     success_url = reverse_lazy("todo-list")
     success_message = "Todo was deleted successfully."
